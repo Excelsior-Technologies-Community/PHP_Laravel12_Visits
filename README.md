@@ -1,59 +1,543 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# PHP_Laravel12_Visits
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Project Description:
 
-## About Laravel
+PHP_Laravel12_Visits is a simple Laravel 12 project that demonstrates how to manage posts and track both total and unique visits for each post. The project includes a modern, responsive dashboard design with card-style post display and visit badges. This is useful for learning database interactions, MVC architecture, and front-end integration in Laravel.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Technologies Used:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Framework: Laravel 12
 
-## Learning Laravel
+- Language: PHP 8+
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- Database: MySQL
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Front-end: Blade Templating, HTML, CSS, Font Awesome Icons
 
-## Laravel Sponsors
+- Tools: Composer, Artisan CLI, phpMyAdmin/XAMPP
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Key Features:
 
-### Premium Partners
+- Create, view, and track posts.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- Track total visits and unique visits per post.
 
-## Contributing
+- Responsive, professional UI with hover effects and badges.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- Fully database-driven with migrations and seeders.
 
-## Code of Conduct
+- Easy to extend for future features like authentication or comments.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## How It Works:
 
-## Security Vulnerabilities
+- Posts are stored in the database with title and body.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- Each post tracks total and unique visits using dedicated columns.
 
-## License
+- PostController fetches posts and passes data to the Blade view for display.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+---
+
+
+
+## Installation Steps
+
+
+---
+
+
+## STEP 1: Create Laravel 12 Project
+
+### Open terminal / CMD and run:
+
+```
+composer create-project laravel/laravel PHP_Laravel12_Visits "12.*"
+
+```
+
+### Go inside project:
+
+```
+cd PHP_Laravel12_Visits
+
+```
+
+#### Explanation:
+
+Installs a fresh Laravel 12 application with all core files.
+
+
+
+
+
+## STEP 2: Database Setup 
+
+### Open .env and set:
+
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel12_visits
+DB_USERNAME=root
+DB_PASSWORD=
+
+```
+
+### Create database in MySQL / phpMyAdmin:
+
+```
+Database name: laravel12_visits
+
+```
+
+
+### Run initial migration:
+
+```
+php artisan migrate
+
+```
+
+
+#### Explanation:
+
+Configures database connection for Laravel to store posts and visits.
+
+Creates default Laravel tables like users and migrations.
+
+
+
+
+## STEP 3: Create a Posts Table
+
+### Run:
+
+```
+php artisan make:model Post -m
+
+```
+
+### Edit migration file in database/migrations/..._create_posts_table.php:
+
+```
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    public function up(): void
+    {
+        Schema::create('posts', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->text('body');
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('posts');
+    }
+};
+
+```
+
+
+### Run migration:
+
+```
+php artisan migrate
+
+```
+
+#### Explanation:
+
+Generates the Post model and migration file.
+
+Creates the posts table with title and body columns.
+
+
+
+
+
+## STEP 4: Seed Some Example Posts
+
+### Run: 
+
+```
+php artisan make:seeder PostSeeder
+
+```
+
+### database/seeders/PostSeeder.php:
+
+```
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use App\Models\Post;
+
+class PostSeeder extends Seeder
+{
+    public function run(): void
+    {
+        Post::create([
+            'title' => 'First Post',
+            'body' => 'This is the first post body.'
+        ]);
+
+        Post::create([
+            'title' => 'Second Post',
+            'body' => 'This is the second post body.'
+        ]);
+    }
+}
+
+```
+
+
+### Run seeder:
+
+```
+php artisan db:seed --class=PostSeeder
+
+```
+
+
+#### Explanation:
+
+Populates the posts table with sample data for testing.
+
+
+
+
+## STEP 5: Create VisitController
+
+### Run:
+
+```
+php artisan make:controller PostController
+
+```
+
+### app/Http/Controllers/PostController.php:
+
+```
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Post;
+
+class PostController extends Controller
+{
+    public function index()
+    {
+        $posts = Post::all();
+
+        // Set default visits to 0
+        foreach ($posts as $post) {
+            $post->totalVisits = 1;
+            $post->uniqueVisits = 1;
+        }
+
+        return view('posts.index', compact('posts'));
+    }
+}
+
+```
+
+#### Explanation:
+
+Fetches posts from the database and prepares visit counters for display.
+
+
+
+
+
+## STEP 6: Set Routes
+
+### routes/web.php:
+
+```
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\PostController;
+
+Route::get('/', [PostController::class, 'index']);
+
+
+```
+
+
+#### Explanation:
+
+Sets the home page route to display the posts dashboard.
+
+
+
+
+
+## STEP 7: Create Blade Views
+
+### resources/views/posts/index.blade.php
+
+```
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Posts</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header */
+        h1 {
+            text-align: center;
+            margin-top: 40px;
+            color: #fff;
+            background: linear-gradient(90deg, #1e3a8a, #2563eb); /* Dark to lighter blue */
+            padding: 25px 0;
+            border-radius: 10px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            font-size: 2.2em;
+        }
+
+        /* Posts list */
+        ul {
+            list-style: none;
+            padding: 0;
+            max-width: 900px;
+            margin: 30px auto;
+        }
+
+        /* Post card */
+        li {
+            background-color: #ffffff;
+            border-left: 6px solid #2563eb; /* professional blue */
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            padding: 25px 20px;
+            margin-bottom: 25px;
+            transition: transform 0.25s, box-shadow 0.25s;
+        }
+
+        li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #1f2937;
+            font-size: 1.6em;
+        }
+
+        p {
+            line-height: 1.7;
+            color: #4b5563;
+            font-size: 1em;
+        }
+
+        /* Visits badges */
+        .visits {
+            display: inline-flex;
+            align-items: center;
+            margin-top: 15px;
+            padding: 6px 12px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+
+        .total-visits {
+            background-color: #60a5fa; /* Light blue */
+            color: #1e3a8a;
+            margin-right: 10px;
+        }
+
+        .unique-visits {
+            background-color: #34d399; /* Mint green */
+            color: #065f46;
+        }
+
+        .visits i {
+            margin-right: 6px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            li {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            h2 {
+                font-size: 1.3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Posts Dashboard</h1>
+    @if($posts->count())
+        <ul>
+            @foreach($posts as $post)
+                <li>
+                    <h2>{{ $post->title }}</h2>
+                    <p>{{ $post->body }}</p>
+                    <span class="visits total-visits"><i class="fas fa-eye"></i> Total Visits: {{ $post->totalVisits }}</span>
+                    <span class="visits unique-visits"><i class="fas fa-user-check"></i> Unique Visits: {{ $post->uniqueVisits }}</span>
+                </li>
+            @endforeach
+        </ul>
+    @else
+        <p style="text-align: center; color: #6b7280; margin-top: 20px;">No posts found.</p>
+    @endif
+</body>
+</html>
+
+```
+
+#### Explanation:
+
+Displays posts in a modern card layout with professional colors, hover effects, and visit badges.
+
+
+
+
+
+## STEP 8: Add visit columns to posts table
+
+### Create a migration:
+
+```
+php artisan make:migration add_visits_to_posts_table --table=posts
+
+```
+
+### Edit it like this:
+
+```
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    public function up(): void
+    {
+        Schema::table('posts', function (Blueprint $table) {
+            $table->integer('total_visits')->default(0);
+            $table->integer('unique_visits')->default(0);
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('posts', function (Blueprint $table) {
+            $table->dropColumn(['total_visits', 'unique_visits']);
+        });
+    }
+};
+
+```
+
+
+#### Explanation:
+
+Adds columns for tracking total and unique post visits.
+
+
+
+
+## STEP 9: Run Server
+
+### Run: 
+
+```
+php artisan serve
+
+```
+
+### Open:
+
+```
+http://127.0.0.1:8000
+
+```
+
+#### Explanation:
+
+Starts the development server to view posts dashboard locally.
+
+
+
+
+## Expected Output:
+
+
+<img width="1919" height="958" alt="Screenshot 2026-02-23 184832" src="https://github.com/user-attachments/assets/7c66ce12-1ff7-4f5c-8c5d-c504151c7464" />
+
+
+
+---
+
+# Project Folder Structure:
+
+```
+PHP_Laravel12_Visits/
+│
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   └── PostController.php
+│   │   └── ...
+│   ├── Models/
+│   │   └── Post.php
+│   └── ...
+│
+├── database/
+│   ├── migrations/
+│   │   ├── 2026_02_23_000000_create_posts_table.php
+│   │   └── 2026_02_23_000001_add_visits_to_posts_table.php
+│   ├── seeders/
+│   │   └── PostSeeder.php
+│   └── ...
+│
+├── resources/
+│   └── views/
+│       └── posts/
+│           └── index.blade.php
+│
+├── routes/
+│   └── web.php
+│
+├── public/
+│   └── index.php
+│
+├── composer.json
+└── .env
+
+```
