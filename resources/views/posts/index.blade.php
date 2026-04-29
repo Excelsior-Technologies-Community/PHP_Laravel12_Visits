@@ -2,30 +2,36 @@
 <html>
 <head>
     <title>Posts</title>
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
     <style>
-        /* General Styles */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f0f2f5;
-            color: #333;
             margin: 0;
             padding: 0;
         }
 
-        /* Header */
         h1 {
             text-align: center;
             margin-top: 40px;
             color: #fff;
-            background: linear-gradient(90deg, #1e3a8a, #2563eb); /* Dark to lighter blue */
+            background: linear-gradient(90deg, #1e3a8a, #2563eb);
             padding: 25px 0;
             border-radius: 10px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
             font-size: 2.2em;
         }
 
-        /* Posts list */
+        input {
+            display: block;
+            margin: 20px auto;
+            padding: 10px;
+            width: 50%;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
         ul {
             list-style: none;
             padding: 0;
@@ -33,15 +39,14 @@
             margin: 30px auto;
         }
 
-        /* Post card */
         li {
             background-color: #ffffff;
-            border-left: 6px solid #2563eb; /* professional blue */
+            border-left: 6px solid #2563eb;
             border-radius: 12px;
             box-shadow: 0 4px 16px rgba(0,0,0,0.08);
             padding: 25px 20px;
             margin-bottom: 25px;
-            transition: transform 0.25s, box-shadow 0.25s;
+            transition: 0.3s;
         }
 
         li:hover {
@@ -50,18 +55,24 @@
         }
 
         h2 {
-            margin-top: 0;
-            color: #1f2937;
+            margin: 0;
             font-size: 1.6em;
         }
 
-        p {
-            line-height: 1.7;
-            color: #4b5563;
-            font-size: 1em;
+        h2 a {
+            text-decoration: none;
+            color: #1f2937;
         }
 
-        /* Visits badges */
+        h2 a:hover {
+            color: #2563eb;
+        }
+
+        p {
+            color: #4b5563;
+            line-height: 1.7;
+        }
+
         .visits {
             display: inline-flex;
             align-items: center;
@@ -73,51 +84,83 @@
         }
 
         .total-visits {
-            background-color: #60a5fa; /* Light blue */
+            background-color: #60a5fa;
             color: #1e3a8a;
             margin-right: 10px;
         }
 
         .unique-visits {
-            background-color: #34d399; /* Mint green */
+            background-color: #34d399;
             color: #065f46;
-        }
-
-        .visits i {
-            margin-right: 6px;
-        }
-
-        /* Responsive */
-        @media (max-width: 600px) {
-            li {
-                padding: 20px;
-            }
-
-            h1 {
-                font-size: 1.8em;
-            }
-
-            h2 {
-                font-size: 1.3em;
-            }
         }
     </style>
 </head>
+
 <body>
-    <h1>Posts Dashboard</h1>
-    @if($posts->count())
-        <ul>
-            @foreach($posts as $post)
+
+<h1>Posts Dashboard</h1>
+
+<!-- 🔥 SEARCH BOX -->
+<input type="text" id="search" placeholder="Search posts...">
+
+<ul id="postList">
+    @foreach($posts as $post)
+        <li>
+            <!-- CLICKABLE POST -->
+            <h2>
+                <a href="/post/{{ $post->id }}">
+                    {{ $post->title }}
+                </a>
+            </h2>
+
+            <p>{{ $post->body }}</p>
+
+            <!-- VISITS (correct DB fields) -->
+            <span class="visits total-visits">
+                <i class="fas fa-eye"></i>
+                Total Visits: {{ $post->total_visits }}
+            </span>
+
+            <span class="visits unique-visits">
+                <i class="fas fa-user-check"></i>
+                Unique Visits: {{ $post->unique_visits }}
+            </span>
+        </li>
+    @endforeach
+</ul>
+
+<!-- 🔥 AJAX SEARCH -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$('#search').on('keyup', function () {
+    let query = $(this).val();
+
+    $.ajax({
+        url: "/search-posts",
+        type: "GET",
+        data: { query: query },
+        success: function (data) {
+
+            let html = '';
+
+            data.forEach(post => {
+                html += `
                 <li>
-                    <h2>{{ $post->title }}</h2>
-                    <p>{{ $post->body }}</p>
-                    <span class="visits total-visits"><i class="fas fa-eye"></i> Total Visits: {{ $post->totalVisits }}</span>
-                    <span class="visits unique-visits"><i class="fas fa-user-check"></i> Unique Visits: {{ $post->uniqueVisits }}</span>
-                </li>
-            @endforeach
-        </ul>
-    @else
-        <p style="text-align: center; color: #6b7280; margin-top: 20px;">No posts found.</p>
-    @endif
+                    <h2>
+                        <a href="/post/${post.id}">
+                            ${post.title}
+                        </a>
+                    </h2>
+                    <p>${post.body}</p>
+                </li>`;
+            });
+
+            $('#postList').html(html);
+        }
+    });
+});
+</script>
+
 </body>
 </html>
